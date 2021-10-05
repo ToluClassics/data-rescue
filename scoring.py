@@ -21,8 +21,8 @@ parser.add_argument('--config_file_path', '--cfg-fil-pth', help='default train c
 parser.add_argument('--checkpoint_file', help='checkpoint model path',
                     default='segmentation/epoch_20.pth')
 parser.add_argument('--image_path', help='image  path')
-parser.add_argument('--input_image_directory', help='input image directory')
-parser.add_argument('--output_directory', help='output csv directory')
+parser.add_argument('--input_image_directory', help='input image directory', required=True)
+parser.add_argument('--output_directory', help='output csv directory', required=True)
 args = parser.parse_args()
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
