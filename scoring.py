@@ -66,7 +66,7 @@ def img_inference(image_path: str, output_path: str):
                                                lang=lang)
             return text
 
-        sn = [extract_text(sn_config, i, lang='datarescue', image=img, gap=5) for i in new_station_names]
+        sn = [extract_text(sn_config, i, lang='eng', image=img, gap=5) for i in new_station_names]
         table = [extract_text(tab_config, i, lang='eng', image=img, gap=10) for i in new_table_region]
 
         for i in range(len(sn)):
