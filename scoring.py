@@ -22,6 +22,7 @@ parser.add_argument('--checkpoint_file', help='checkpoint model path',
                     default='segmentation/epoch_20.pth')
 parser.add_argument('--image_path', help='image  path')
 parser.add_argument('--input_image_directory', help='input image directory')
+parser.add_argument('--output_directory', help='output csv directory')
 args = parser.parse_args()
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -85,7 +86,6 @@ def img_inference(image_path: str, output_path: str):
     else:
         output_file_name = os.path.join(output_path, image_path.split("/")[-1].split('.')[0]+'.txt')
         print(output_file_name)
-        #read_page(img, )
 
 
 def image_preprocessing(img):
@@ -125,4 +125,4 @@ def run_ocr_directory(directory: str, output_dir: str):
 
 
 if __name__ == "__main__":
-    run_ocr_directory(args.input_image_directory, '/Users/mac/Desktop/SRARB/results/')
+    run_ocr_directory(args.input_image_directory, args.output_directory)
