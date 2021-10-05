@@ -37,8 +37,6 @@ def img_inference(image_path: str, output_path: str):
     # Run Inference
     result = inference_detector(model, img)
 
-    print(result)
-
     tables_region = [r[:4].astype(int) for r in result[1] if r[4] > .85]
     station_names = [r[:4].astype(int) for r in result[0] if r[4] > .85]
 
@@ -68,7 +66,7 @@ def img_inference(image_path: str, output_path: str):
             return text
 
         sn = [extract_text(sn_config, i, lang='datarescue', image=img, gap=5) for i in new_station_names]
-        table = [extract_text(tab_config, i, lang='rus', image=img, gap=10) for i in new_table_region]
+        table = [extract_text(tab_config, i, lang='eng', image=img, gap=10) for i in new_table_region]
 
         for i in range(len(sn)):
             w_2csv = [item.split() for item in sn[i].split('\n') if item != ""]
@@ -80,7 +78,7 @@ def img_inference(image_path: str, output_path: str):
             f_2csv = [','.join(row).replace('L', '1').replace('I', '1').split(',') for row in f_2csv]
 
             output_file_name = os.path.join(output_path, image_path.split("/")[-1].split('.')[0])
-            with open(output_file_name + str(i) + ".csv", "w") as file:
+            with open(output_file_name + "_" + str(i) + ".csv", "w") as file:
                 writer = csv.writer(file)
                 writer.writerows(w_2csv)
                 writer.writerows(f_2csv)
@@ -118,10 +116,13 @@ def image_preprocessing(img):
 
 def run_ocr_directory(directory: str, output_dir: str):
     assert(os.path.exists(directory)), "directory does not exist"
-    file_list = [ldir for ldir in os.listdir(directory)]
+    file_list = [os.path.join(directory, ldir) for ldir in os.listdir(directory) if ldir.endswith('.tif') \
+                 or ldir.endswith('.tiff')]
 
-    print(file_list)
+    for file in file_list:
+        print(f"[FILE] ==> {file}")
+        img_inference(file, output_dir)
 
 
 if __name__ == "__main__":
-    run_ocr_directory(args.input_image_directory)
+    run_ocr_directory(args.input_image_directory, '/Users/mac/Desktop/SRARB/results/')
