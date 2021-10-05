@@ -16,7 +16,7 @@ def read_page(input_image, output_file: str, languages=['rus', 'eng']):
         input_image = cv2.imread(input_image)
 
     languages = '+'.join(languages)
-    text = pytesseract.image_to_string(input_image, config="--psm 6 --oem 2",
+    text = pytesseract.image_to_string(input_image, config="--psm 6 --oem 3",
                                        lang=languages)
 
     # write to text file

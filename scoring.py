@@ -11,7 +11,7 @@ from mmdet.apis import init_detector, inference_detector
 
 
 sn_config = "--psm 6 --oem 3 -c tessedit_char_blacklist=1234567890@!#$%^&*()«"
-tab_config = "-c tessedit_char_whitelist=0123456789.()LI- --oem 3 --psm 6"
+tab_config = "-c tessedit_char_whitelist=()0123456789.LI- --oem 3 --psm 6"
 
 
 parser = argparse.ArgumentParser(description='Run OCR on a SSR Data Point')
@@ -42,7 +42,7 @@ def img_inference(image_path: str, output_path: str):
     station_names = [r[:4].astype(int) for r in result[0] if r[4] > .85]
 
     if len(tables_region) != 0 and len(station_names) != 0:
-        if len(station_names) > 1:
+        if len(station_names) > 0:
             y_index = {i: y[1] for i, y in enumerate(station_names)}
             y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
             y_index = {v: k for k, v in y_index.items()}
@@ -51,7 +51,7 @@ def img_inference(image_path: str, output_path: str):
             for k, v in y_index.items():
                 new_station_names.append(station_names[v])
 
-        if len(tables_region) > 1:
+        if len(tables_region) > 0:
             y_index = {i: y[1] for i, y in enumerate(tables_region)}
             y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
             y_index = {v: k for k, v in y_index.items()}
@@ -85,7 +85,8 @@ def img_inference(image_path: str, output_path: str):
                 writer.writerows(f_2csv)
     else:
         output_file_name = os.path.join(output_path, image_path.split("/")[-1].split('.')[0]+'.txt')
-        print(output_file_name)
+        read_page(img, output_file_name)
+        print(f'[OUTPUT FILE]::> {output_file_name}')
 
 
 def image_preprocessing(img):
@@ -126,3 +127,4 @@ def run_ocr_directory(directory: str, output_dir: str):
 
 if __name__ == "__main__":
     run_ocr_directory(args.input_image_directory, args.output_directory)
+    #img_inference("/Users/mac/Documents/SRARB_1964-01/00151.tif", "/Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01")
