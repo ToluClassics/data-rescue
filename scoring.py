@@ -125,10 +125,18 @@ def run_ocr_directory(directory: str, output_dir: str):
         img_inference(file, output_dir)
 
 
-if __name__ == "__main__":
-    img = cv2.imread("/Users/mac/Documents/SRARB_1964-01/00060.tif")
-    img = image_preprocessing(img)
+def preprocess_images(directory: str, output_dir: str):
+    assert (os.path.exists(directory)), "directory does not exist"
+    file_list = [os.path.join(directory, ldir) for ldir in os.listdir(directory) if ldir.endswith('.tif') \
+                 or ldir.endswith('.tiff')]
 
-    cv2.imwrite("/Users/mac/Documents/processes.png", img)
+    for file in file_list:
+        print(f"[FILE] ==> {file}")
+        img = cv2.imread(file)
+        img = image_preprocessing(img)
+        cv2.imwrite(os.path.join(output_dir, file.split('/')[-1].split('.')[0]+"_3.png"), img)
+
+
+if __name__ == "__main__":
     #run_ocr_directory(args.input_image_directory, args.output_directory)
-    #img_inference("/Users/mac/Documents/SRARB_1964-01/00151.tif", "/Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01")
+    preprocess_images(args.input_image_directory, args.output_directory)
