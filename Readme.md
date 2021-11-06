@@ -23,17 +23,20 @@ In this section, we describe the steps required to setup and retrain the categor
 
 - Clone the project
 
-```
+```bash
 $ git clone https://github.com/gwf-uwaterloo/data-rescue.git
 ```
 
 - Create a virtual environment, install requirements
-```
+```bash
 $ python3 -m venv env
 
 (env) $ source env/bin/activate
 (env) $ pip install -r requirements.txt
 
-More to follow....
+```
 
+- Scoring
+```bash
+(env) $  python3 scoring.py --config_file_path segmentation/Training_config.py --checkpoint_file segmentation/epoch_20.pth --input_image_directory xxx --output_directory xxx
 ```

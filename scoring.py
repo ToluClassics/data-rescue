@@ -20,7 +20,7 @@ parser.add_argument('--config_file_path', '--cfg-fil-pth', help='default train c
                     default="segmentation/Training_config.py")
 parser.add_argument('--checkpoint_file', help='checkpoint model path',
                     default='segmentation/epoch_20.pth')
-parser.add_argument('--image_path', help='image  path')
+parser.add_argument('--image_path', help='image path')
 parser.add_argument('--input_image_directory', help='input image directory', required=True)
 parser.add_argument('--output_directory', help='output csv directory', required=True)
 args = parser.parse_args()
@@ -126,5 +126,9 @@ def run_ocr_directory(directory: str, output_dir: str):
 
 
 if __name__ == "__main__":
-    run_ocr_directory(args.input_image_directory, args.output_directory)
+    img = cv2.imread("/Users/mac/Documents/SRARB_1964-01/00060.tif")
+    img = image_preprocessing(img)
+
+    cv2.imwrite("/Users/mac/Documents/processes.png", img)
+    #run_ocr_directory(args.input_image_directory, args.output_directory)
     #img_inference("/Users/mac/Documents/SRARB_1964-01/00151.tif", "/Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01")
