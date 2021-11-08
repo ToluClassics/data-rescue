@@ -38,5 +38,5 @@ $ python3 -m venv env
 
 - Scoring
 ```bash
-(env) $  python3 scoring.py --config_file_path segmentation/Training_config.py --checkpoint_file segmentation/epoch_20.pth --input_image_directory xxx --output_directory xxx
+(env) $  python3 scoring.py --config_file_path segmentation/table_det_config.py --checkpoint_file segmentation/table_detection.pth --input_image_directory xxx --output_directory xxx
 ```

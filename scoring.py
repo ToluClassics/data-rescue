@@ -17,9 +17,9 @@ tab_config = "-c tessedit_char_whitelist=()0123456789.LI- --oem 3 --psm 6"
 parser = argparse.ArgumentParser(description='Run OCR on a SSR Data Point')
 
 parser.add_argument('--config_file_path', '--cfg-fil-pth', help='default train config file path',
-                    default="segmentation/Training_config.py")
+                    default="segmentation/table_det_config.py")
 parser.add_argument('--checkpoint_file', help='checkpoint model path',
-                    default='segmentation/epoch_20.pth')
+                    default='segmentation/table_detection.pth')
 parser.add_argument('--image_path', help='image path')
 parser.add_argument('--input_image_directory', help='input image directory', required=True)
 parser.add_argument('--output_directory', help='output csv directory', required=True)
