@@ -18,5 +18,5 @@ for year in range(1980, 1992):
 			if "tif" in filenames:
 				print(month,filenames)
 				file_path = os.path.join(new_path, filenames)
-				command = " str(python ocr.py -i " + file_path + " -f " + month)
-				os.system(command)
+				#command = " str(python ocr.py -i " + file_path + " -f " + month)
+				#os.system(command)

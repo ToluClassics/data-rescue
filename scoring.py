@@ -1,5 +1,4 @@
 import os
-import os.path as path
 import numpy as np
 import torch
 import cv2

@@ -37,8 +37,3 @@ lii2 = [x[0:max_len] for x in temp]
 df = pd.DataFrame(list(zip(*lii2)))
 
 print(df)
-
-
-
-#cv2.imshow('image', img_crop)
-#cv2.waitKey(0)
