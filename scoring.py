@@ -5,9 +5,14 @@ import cv2
 import csv
 import pytesseract
 import argparse
+import warnings
+from datetime import datetime
 from read_text_pages import read_page
 from mmdet.apis import init_detector, inference_detector
+from row_inference import column_result_det
 
+
+warnings.filterwarnings("ignore")
 
 sn_config = "--psm 6 --oem 3 -c tessedit_char_blacklist=1234567890@!#$%^&*()«"
 tab_config = "-c tessedit_char_whitelist=()0123456789.LI- --oem 3 --psm 6"
@@ -37,6 +42,7 @@ def img_inference(image_path: str, output_path: str):
     # Run Inference
     result = inference_detector(model, img)
 
+    print(str(datetime.now()), ": [INFO] Table Extraction Complete")
     tables_region = [r[:4].astype(int) for r in result[1] if r[4] > .85]
     station_names = [r[:4].astype(int) for r in result[0] if r[4] > .85]
 
@@ -65,23 +71,23 @@ def img_inference(image_path: str, output_path: str):
                                                lang=lang)
             return text
 
+        def extract_table_df(config: str, index: int, lang: str, image, gap):
+            crop = image[index[1] - gap:index[3] + gap, index[0] - gap:index[2] + gap]
+            df = column_result_det(crop)
+            return df
+
         sn = [extract_text(sn_config, i, lang='eng', image=img, gap=5) for i in new_station_names]
-        table = [extract_text(tab_config, i, lang='eng', image=img, gap=10) for i in new_table_region]
+        table = [extract_table_df(tab_config, i, lang='eng', image=img, gap=10) for i in new_table_region]
+        print(str(datetime.now()), ": [INFO] Table Columns Complete")
 
         for i in range(len(sn)):
             w_2csv = [item.split() for item in sn[i].split('\n') if item != ""]
-            f_2csv = [item.split() for item in table[i].split('\n') if item != ""]
-            if len(f_2csv[0]) <= 2:
-                f_2csv.pop(0)
-
-            f_2csv = [list(filter(('.').__ne__, row)) for row in f_2csv]
-            f_2csv = [','.join(row).replace('L', '1').replace('I', '1').split(',') for row in f_2csv]
 
             output_file_name = os.path.join(output_path, image_path.split("/")[-1].split('.')[0])
             with open(output_file_name + "_" + str(i) + ".csv", "w") as file:
                 writer = csv.writer(file)
                 writer.writerows(w_2csv)
-                writer.writerows(f_2csv)
+            table[i].to_csv(output_file_name + "_" + str(i) + ".csv", mode='a', header=False, index=False)
     else:
         output_file_name = os.path.join(output_path, image_path.split("/")[-1].split('.')[0]+'.txt')
         read_page(img, output_file_name)
@@ -119,6 +125,8 @@ def run_ocr_directory(directory: str, output_dir: str):
     file_list = [os.path.join(directory, ldir) for ldir in os.listdir(directory) if ldir.endswith('.tif') \
                  or ldir.endswith('.tiff')]
 
+    print(str(datetime.now()), f": [INFO] Total number of files in {directory} is {len(file_list)}")
+
     for file in file_list:
         print(f"[FILE] ==> {file}")
         img_inference(file, output_dir)
@@ -137,5 +145,5 @@ def preprocess_images(directory: str, output_dir: str):
 
 
 if __name__ == "__main__":
-    #run_ocr_directory(args.input_image_directory, args.output_directory)
-    preprocess_images(args.input_image_directory, args.output_directory)
+    run_ocr_directory(args.input_image_directory, args.output_directory)
+    #preprocess_images(args.input_image_directory, args.output_directory)

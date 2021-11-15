@@ -59,5 +59,24 @@ def run_ocr_directory(directory: str, output_dir: str):
                 cv2.imwrite(os.path.join(output_dir, file.split('/')[-1].split('.')[0]+'__'+str(i)+'.png'), crop)
 
 
+
+"""
+for i in range(len(sn)):
+    w_2csv = [item.split() for item in sn[i].split('\n') if item != ""]
+    f_2csv = [item.split() for item in table[i].split('\n') if item != ""]
+    if len(f_2csv[0]) <= 2:
+        f_2csv.pop(0)
+
+    f_2csv = [list(filter(('.').__ne__, row)) for row in f_2csv]
+    f_2csv = [','.join(row).replace('L', '1').replace('I', '1').split(',') for row in f_2csv]
+
+    output_file_name = os.path.join(output_path, image_path.split("/")[-1].split('.')[0])
+    with open(output_file_name + "_" + str(i) + ".csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerows(w_2csv)
+        writer.writerows(f_2csv)
+"""
+
+
 if __name__ == "__main__":
     run_ocr_directory(args.input_image_directory, args.output_directory)
