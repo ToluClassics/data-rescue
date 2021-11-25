@@ -1,0 +1,10 @@
+
+2021-11-25 10:46:51,901 - INFO - Loading model into memory
+2021-11-25 10:46:53,097 - INFO - Start processing month 01
+2021-11-25 10:46:53,098 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01 is 68
+2021-11-25 11:26:28,382 - INFO - Done processing month 01, Took 2375.2843430042267 seconds
+2021-11-25 11:26:28,383 - INFO - Start processing month 03
+2021-11-25 11:26:28,386 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-03 is 76
+2021-11-25 12:12:07,369 - INFO - Done processing month 03, Took 2738.9857399463654 seconds
+2021-11-25 12:12:07,371 - INFO - Start processing month 02
+2021-11-25 12:12:07,373 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-02 is 68
