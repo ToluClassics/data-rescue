@@ -71,63 +71,76 @@ def img_inference(image_path: str, output_path: str):
     station_names = [r[:4].astype(int) for r in result[0] if r[4] > 0.85]
 
     if len(tables_region) != 0 and len(station_names) != 0:
-        if len(station_names) > 0:
-            y_index = {i: y[1] for i, y in enumerate(station_names)}
-            y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
-            y_index = {v: k for k, v in y_index.items()}
+        try:
+            if len(station_names) > 0:
+                y_index = {i: y[1] for i, y in enumerate(station_names)}
+                y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
+                y_index = {v: k for k, v in y_index.items()}
 
-            new_station_names = []
-            for k, v in y_index.items():
-                new_station_names.append(station_names[v])
+                new_station_names = []
+                for k, v in y_index.items():
+                    new_station_names.append(station_names[v])
 
-        if len(tables_region) > 0:
-            y_index = {i: y[1] for i, y in enumerate(tables_region)}
-            y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
-            y_index = {v: k for k, v in y_index.items()}
+            if len(tables_region) > 0:
+                y_index = {i: y[1] for i, y in enumerate(tables_region)}
+                y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
+                y_index = {v: k for k, v in y_index.items()}
 
-            new_table_region = []
-            for k, v in y_index.items():
-                new_table_region.append(tables_region[v])
+                new_table_region = []
+                for k, v in y_index.items():
+                    new_table_region.append(tables_region[v])
 
-        def extract_text(config: str, index: int, lang: str, image, gap):
-            crop = image[
-                index[1] - gap : index[3] + gap, index[0] - gap : index[2] + gap
+            def extract_text(config: str, index: int, lang: str, image, gap):
+                crop = image[
+                    index[1] - gap : index[3] + gap, index[0] - gap : index[2] + gap
+                ]
+                text = pytesseract.image_to_string(crop, config=config, lang=lang)
+                return text
+
+            def extract_table_df(config: str, index: int, lang: str, image, gap):
+                crop = image[
+                    index[1] - gap : index[3] + gap, index[0] - gap : index[2] + gap
+                ]
+                df = column_result_det(crop)
+                return df
+
+            sn = [
+                extract_text(sn_config, i, lang="eng", image=img, gap=5)
+                for i in new_station_names
             ]
-            text = pytesseract.image_to_string(crop, config=config, lang=lang)
-            return text
-
-        def extract_table_df(config: str, index: int, lang: str, image, gap):
-            crop = image[
-                index[1] - gap : index[3] + gap, index[0] - gap : index[2] + gap
+            table = [
+                extract_table_df(tab_config, i, lang="eng", image=img, gap=10)
+                for i in new_table_region
             ]
-            df = column_result_det(crop)
-            return df
+            print(str(datetime.now()), ": [INFO] Table Columns Complete")
 
-        sn = [
-            extract_text(sn_config, i, lang="eng", image=img, gap=5)
-            for i in new_station_names
-        ]
-        table = [
-            extract_table_df(tab_config, i, lang="eng", image=img, gap=10)
-            for i in new_table_region
-        ]
-        print(str(datetime.now()), ": [INFO] Table Columns Complete")
+            for i in range(len(sn)):
+                w_2csv = [item.split() for item in sn[i].split("\n") if item != ""]
+                # preprocessing station names
+                if len(w_2csv) >= 4:
+                    w_2csv[0][0] = "COUNTRY"
+                    w_2csv[2][0] = "STATIONS"
+                    w_2csv.pop(1)  # remove russian country name
+                    w_2csv.pop(3)  # remove russian station names
 
-        for i in range(len(sn)):
-            w_2csv = [item.split() for item in sn[i].split("\n") if item != ""]
-
+                output_file_name = os.path.join(
+                    output_path, image_path.split("/")[-1].split(".")[0]
+                )
+                with open(output_file_name + "_" + str(i) + ".csv", "w") as file:
+                    writer = csv.writer(file)
+                    writer.writerows(w_2csv)
+                table[i].to_csv(
+                    output_file_name + "_" + str(i) + ".csv",
+                    mode="a",
+                    header=False,
+                    index=False,
+                )
+        except Exception as e:
             output_file_name = os.path.join(
-                output_path, image_path.split("/")[-1].split(".")[0]
+                output_path, image_path.split("/")[-1].split(".")[0] + ".txt"
             )
-            with open(output_file_name + "_" + str(i) + ".csv", "w") as file:
-                writer = csv.writer(file)
-                writer.writerows(w_2csv)
-            table[i].to_csv(
-                output_file_name + "_" + str(i) + ".csv",
-                mode="a",
-                header=False,
-                index=False,
-            )
+            read_page(img, output_file_name)
+            print(f"[OUTPUT FILE]::> {output_file_name}")
     else:
         output_file_name = os.path.join(
             output_path, image_path.split("/")[-1].split(".")[0] + ".txt"

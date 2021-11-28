@@ -1,10 +1,13 @@
-
-2021-11-25 10:46:51,901 - INFO - Loading model into memory
-2021-11-25 10:46:53,097 - INFO - Start processing month 01
-2021-11-25 10:46:53,098 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01 is 68
-2021-11-25 11:26:28,382 - INFO - Done processing month 01, Took 2375.2843430042267 seconds
-2021-11-25 11:26:28,383 - INFO - Start processing month 03
-2021-11-25 11:26:28,386 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-03 is 76
-2021-11-25 12:12:07,369 - INFO - Done processing month 03, Took 2738.9857399463654 seconds
-2021-11-25 12:12:07,371 - INFO - Start processing month 02
-2021-11-25 12:12:07,373 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-02 is 68
+2021-11-27 09:04:25,585 - INFO - Loading model into memory
+2021-11-27 09:04:26,965 - INFO - Start processing month 01
+2021-11-27 09:04:26,966 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01 is 68
+2021-11-27 14:55:17,732 - INFO - Loading model into memory
+2021-11-27 14:55:19,609 - INFO - Start processing month 01
+2021-11-27 14:55:19,611 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-01 is 68
+2021-11-27 15:35:25,956 - INFO - Done processing month 01, Took 2406.346493959427 seconds
+2021-11-27 15:35:25,958 - INFO - Start processing month 03
+2021-11-27 15:35:25,961 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-03 is 76
+2021-11-27 16:18:08,590 - INFO - Done processing month 03, Took 2562.631757259369 seconds
+2021-11-27 16:18:08,593 - INFO - Start processing month 02
+2021-11-27 16:18:08,595 - INFO - : [INFO] Total number of files in /Users/mac/Documents/SRARB/SRARB_1964/SRARB_1964-02 is 68
+2021-11-27 16:54:35,116 - INFO - Done processing month 02, Took 2186.522041082382 seconds
