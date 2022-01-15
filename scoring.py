@@ -1,4 +1,5 @@
 import os
+from sys import prefix
 import numpy as np
 import torch
 import cv2
@@ -66,12 +67,12 @@ def img_inference(image_path: str, output_path: str):
     # Run Inference
     result = inference_detector(model, img)
 
-    print(str(datetime.now()), ": [INFO] Table Extraction Complete")
     tables_region = [r[:4].astype(int) for r in result[1] if r[4] > 0.85]
     station_names = [r[:4].astype(int) for r in result[0] if r[4] > 0.85]
 
     if len(tables_region) != 0 and len(station_names) != 0:
         try:
+            print(str(datetime.now()), ": [INFO] Table Extraction Complete")
             if len(station_names) > 0:
                 y_index = {i: y[1] for i, y in enumerate(station_names)}
                 y_index = dict(sorted(y_index.items(), key=lambda x: x[1]))
@@ -136,6 +137,7 @@ def img_inference(image_path: str, output_path: str):
                     index=False,
                 )
         except Exception as e:
+            print(e)
             output_file_name = os.path.join(
                 output_path, image_path.split("/")[-1].split(".")[0] + ".txt"
             )
@@ -213,19 +215,19 @@ def preprocess_images(directory: str, output_dir: str):
             os.path.join(output_dir, file.split("/")[-1].split(".")[0] + "_3.png"), img
         )
 
-
-def process_year(input_year_path: str, output_year_path: str):
+def process_year(input_year_path: str, output_year_path: str, prefix: str =  "TIFF"):
     """ """
     if not os.path.exists(output_year_path):
         os.mkdir(output_year_path)
 
     for month in os.listdir(input_year_path):
         if os.path.isdir(os.path.join(input_year_path, month)):
-            input_month_path = os.path.join(input_year_path, month)
+
+            input_month_path = os.path.join(input_year_path, month, prefix)
             # create output directory for each SSR Month if it doesn't exist
-            output_month_path = os.path.join(output_year_path, month)
+            output_month_path = os.path.join(output_year_path, month, "ocr_output")
             if not os.path.exists(output_month_path):
-                os.mkdir(output_month_path)
+                os.makedirs(output_month_path)
 
             logging.info(f"Start processing month {month.split('-')[-1]}")
             start_time = time()
@@ -238,9 +240,33 @@ def process_year(input_year_path: str, output_year_path: str):
                 f"Done processing month {month.split('-')[-1]}, Took {seconds_elapsed} seconds"
             )
 
+# def process_year(input_year_path: str, output_year_path: str):
+#     """ """
+#     if not os.path.exists(output_year_path):
+#         os.mkdir(output_year_path)
+
+#     for month in os.listdir(input_year_path):
+#         if os.path.isdir(os.path.join(input_year_path, month)):
+#             input_month_path = os.path.join(input_year_path, month)
+#             # create output directory for each SSR Month if it doesn't exist
+#             output_month_path = os.path.join(output_year_path, month)
+#             if not os.path.exists(output_month_path):
+#                 os.mkdir(output_month_path)
+
+#             logging.info(f"Start processing month {month.split('-')[-1]}")
+#             start_time = time()
+#             print(input_month_path)
+#             run_ocr_directory(input_month_path, output_month_path)
+#             print(output_month_path)
+#             end_time = time()
+#             seconds_elapsed = end_time - start_time
+#             logging.info(
+#                 f"Done processing month {month.split('-')[-1]}, Took {seconds_elapsed} seconds"
+#             )
+
 
 if __name__ == "__main__":
     if args.input_image_directory and args.output_directory:
         run_ocr_directory(args.input_image_directory, args.output_directory)
     elif args.image_year_directory and args.output_image_year_directory:
-        process_year(args.image_year_directory, args.output_image_year_directory)
+        process_year(args.image_year_directory, args.output_image_year_directory, prefix="")

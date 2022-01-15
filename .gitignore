@@ -32,4 +32,5 @@ MANIFEST
 
 .csv
 *.pth
+*.log
 
